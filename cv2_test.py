@@ -96,8 +96,6 @@ def get_treshold(img, hue_center_value, hue_eps, saturation = 124):
 def make_binary_operations(img):
     dilation = cv.dilate(img, cross_kernel, iterations = 1)
     erosion = cv.erode(dilation, cross_kernel, iterations = 1)
-    
-    
     return erosion
 
 
