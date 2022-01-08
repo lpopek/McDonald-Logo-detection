@@ -3,7 +3,18 @@ from matplotlib import scale
 import numpy as np
 import matplotlib.pyplot as plt
 
+from skimage.color import rgb2gray
+from skimage.filters import sobel
+from skimage.segmentation import felzenszwalb, slic, quickshift, watershed
+from skimage.segmentation import mark_boundaries
+from skimage.util import img_as_float
+from skimage.measure import regionprops
+import matplotlib.patches as mpatches
 # Rectangular Kernel
+
+
+
+
 
 rectangle_kernel = np.array([[1, 1, 1, 1, 1],
                             [1, 1, 1, 1, 1],
@@ -68,17 +79,6 @@ def print_img(img, title="domyslny", gray_scale_flag = False):
         plt.imshow(img, cmap="gray")
         plt.show()
 
-def plot_few_images(img_list):
-    w = 10
-    h = 10
-    fig = plt.figure(figsize=(8, 8))
-    columns = 4
-    rows = 5
-    for i in range(1, columns*rows +1):
-        fig.add_subplot(rows, columns, i)
-        plt.imshow(img)
-    plt.show()
-
 def get_treshold(img, hue_center_value, hue_eps, saturation = 124):
     h, w, c= img.shape
     img_tresholded = np.zeros((h, w))
@@ -100,6 +100,28 @@ def make_binary_operations(img):
     
     return erosion
 
+
+def mark_regions(img, segments):
+    fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(6, 6))
+    ax.imshow(img)
+    i = 0 
+    for region in regionprops(segments):
+        minr, minc, maxr, maxc = region.bbox
+        rect = mpatches.Rectangle((minc, minr), maxc - minc, maxr - minr,
+                                fill=False, edgecolor='red', label="deer", linewidth=2)
+
+        ax.add_patch(rect)
+        i += 1
+    plt.show()
+
+def segmentation(img):
+    segments_fz = felzenszwalb(img, scale=1000, sigma=0.5, min_size=500, multichannel=False)
+    print(f"Felzenszwalb number of segments: {len(np.unique(segments_fz))}")
+    plt.imshow(mark_boundaries(img, segments_fz))
+    plt.title("Felzenszwalbs's method")
+    plt.show()
+    return segments_fz
+
 def main():
     
     #print_img(img_0)
@@ -111,12 +133,8 @@ def main():
         # print_img(img_gray, "w skali szarości", gray_scale_flag=True)
         img_tresholded = get_treshold(img, 22, 8)
         img = make_binary_operations(img_tresholded)
-        fig = plt.figure(figsize=(2, 1))
-        fig.add_subplot(2, 1, 1)
-        plt.imshow(img_tresholded)
-        fig.add_subplot(2, 1, 2)
-        plt.imshow(img)
-        plt.show()
+        seg = segmentation(img_tresholded)
+        mark_regions(img_tresholded, seg)
         
 
 
