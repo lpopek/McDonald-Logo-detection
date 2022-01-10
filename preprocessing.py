@@ -1,6 +1,17 @@
 import cv2 as cv
 import numpy as np
 
+def get_extremal_channel_value(channel_1, channel_2, is_max = True):
+    if is_max is True:
+        max_c1 = np.amax(np.array(channel_1))
+        max_c2 = np.amax(np.array(channel_2))
+        return max_c1 if max_c2 < max_c1 else max_c2
+    else:
+        min_c1 = np.amin(np.array(channel_1))
+        min_c2 = np.amin(np.array(channel_2))
+        return min_c2 if min_c2 < min_c1 else min_c1
+
+
 def get_kernel(size, rec_type="rectangle"):
     if rec_type == "rectangle":
         return np.ones((size, size), dtype=np.uint8)
@@ -13,7 +24,6 @@ def get_kernel(size, rec_type="rectangle"):
             kernel[mid][i] = 1
         return kernel
 
-print(get_kernel(7, rec_type="cross"))
 
 def invert_opencv_split(img):
     b, g, r = cv.split(img)
@@ -21,39 +31,49 @@ def invert_opencv_split(img):
 
 def convert_RGB2GRAY(img):
     h, w, c= img.shape
-    img_gray = np.zeros((h, w))
+    img_gray = np.zeros((h, w), dtype=np.uint8)
     i, j  = 0, 0
     for row in img:
         for pix in row:
-            img_gray[i][j] = sum(pix)/3
+            img_gray[i][j] = pix[0] * 0.114 + pix[1] * 0.587 + pix[2] * 0.299
             j += 1
         i += 1
         j = 0
-    print("image conevrted from RGB to GRAY")
+    print("image converted from RGB to GRAY")
     return img_gray
 
-def convert_RGB2HSV(img):
-    r, g, b = cv.split(img)
-    maxc = max(r, g, b)
-    minc = min(r, g, b)
-    v = maxc
-    if minc == maxc:
-        print("image conevrted from RGB to HSV")
-        return 0.0, 0.0, v
-    s = (maxc-minc) / maxc
-    rc = (maxc-r) / (maxc-minc)
-    gc = (maxc-g) / (maxc-minc)
-    bc = (maxc-b) / (maxc-minc)
-    if r == maxc:
-        h = bc-gc
-    elif g == maxc:
-        h = 2.0 + rc - bc
-    else:
-        h = 4.0 + gc - rc
-    h = (h / 6.0)  % 1.0
-
-    print("image conevrted from RGB to HSV")
-    return h, s, v
+def convert_BGR2HSV(img, is_RGB = False):
+    hsv_img = np.zeros(img.shape, dtype=np.uint8)
+    i, j = 0, 0
+    for row in img:
+        for pix in row:
+            if is_RGB is True:
+                r, g, b = pix[2]/255.0, pix[1]/255.0, pix[0]/255.0
+            else:
+                b, g, r = pix[0]/255.0, pix[1]/255.0, pix[2]/255.0
+            cmax = max(r, g, b)   
+            cmin = min(r, g, b)    
+            diff = cmax - cmin       
+            if cmax == cmin:
+                h = 0
+            elif cmax == r:
+                h = ((60 * (g - b) / diff)) 
+            elif cmax == g:
+                h = ((60 * (b - r) / diff) + 120) 
+            elif cmax == b:
+                h = ((60 * (r - g) / diff) + 240) 
+            if h < 0 : h += 360
+            if cmax == 0:
+                s = 0
+            else:
+                s = (diff / cmax)
+            v = cmax
+            hsv_img[i][j] =  h // 2, 255 * s, 255 *v
+            j += 1
+        i += 1
+        j = 0
+    print("image converted from RGB to HSV")
+    return hsv_img
 
 def get_treshold(img, hue_center_value, hue_eps, saturation = 124):
     h, w, c= img.shape
@@ -69,15 +89,17 @@ def get_treshold(img, hue_center_value, hue_eps, saturation = 124):
     print("treshold ready!")
     return img_tresholded
 
-def erode_img(img, kernel):
+def erode_img(img, kern_size = 7,  kern_type="rectangle"):
     m, n = img.shape
-    SE= np.ones((k,k), dtype=np.uint8)
-    constant= (k-1)//2
-    #Define new image
-    imgErode= np.zeros((m,n), dtype=np.uint8)
-    #Erosion without using inbuilt cv2 function for morphology
-    for i in range(constant, m-constant):
-        for j in range(constant,n-constant):
-            temp= img[i-constant:i+constant+1, j-constant:j+constant+1]
-            product= temp*SE
+    if kern_type == "rectangle":
+        kernel = get_kernel(kern_size)
+    elif kern_type == "cross":
+        kernel = get_kernel(kern_size, kern_type=kern_type)
+    k_const = (kern_size - 1) // 2
+    imgErode = np.zeros((m,n), dtype=np.uint8)
+    for i in range(k_const, m - k_const):
+        for j in range(k_const, n - k_const):
+            temp= img[i-k_const:i+k_const+1, j-k_const:j+k_const+1]
+            product= temp * kernel
             imgErode[i,j]= np.min(product)
+    return kern_size

@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
-def get_image(image_path):
+def get_image_from_dataset(image_path):
     img = cv.imread(image_path)
     img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     print("image loaded")
@@ -32,3 +32,4 @@ def print_img(img, title="domyslny", gray_scale_flag = False):
         plt.title(title)
         plt.imshow(img, cmap="gray")
         plt.show()
+

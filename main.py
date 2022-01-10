@@ -3,7 +3,7 @@ import cv2 as cv
 
 
 def main():
-    pass
+    IMG = cv.imread("test\test.png")
 
 
 if __name__ == "__main__":
