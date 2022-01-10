@@ -21,6 +21,8 @@ class TestPreprocessingMethods(unittest.TestCase):
     def test_convert_RGB2HSV(self):
         img_hsv  = cv.cvtColor(IMG, cv.COLOR_BGR2HSV)
         img_hsv_test = pr.convert_BGR2HSV(IMG)
+        db.print_img(img_hsv_test)
+        db.print_img(img_hsv)
         self.assertAlmostEqual(img_hsv.all(), img_hsv_test.all(), places=None, delta = 1.1)
 
 if __name__ == '__main__':

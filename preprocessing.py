@@ -89,17 +89,30 @@ def get_treshold(img, hue_center_value, hue_eps, saturation = 124):
     print("treshold ready!")
     return img_tresholded
 
-def erode_img(img, kern_size = 7,  kern_type="rectangle"):
-    m, n = img.shape
+def erode_img(img, kern_size=7,  kern_type="rectangle"):
     if kern_type == "rectangle":
         kernel = get_kernel(kern_size)
     elif kern_type == "cross":
         kernel = get_kernel(kern_size, kern_type=kern_type)
     k_const = (kern_size - 1) // 2
-    imgErode = np.zeros((m,n), dtype=np.uint8)
-    for i in range(k_const, m - k_const):
-        for j in range(k_const, n - k_const):
+    img_erode = np.zeros(img.shape, dtype=np.uint8)
+    for i in range(k_const, img.shape[0] - k_const):
+        for j in range(k_const, img.shape[1] - k_const):
             temp= img[i-k_const:i+k_const+1, j-k_const:j+k_const+1]
             product= temp * kernel
-            imgErode[i,j]= np.min(product)
-    return kern_size
+            img_erode[i,j]= np.min(product)
+    return img_erode
+
+def dilate_img(img, kern_size=7,  kern_type="rectangle"):
+    img_dilate= np.zeros(img.shape, dtype=np.uint8)
+    if kern_type == "rectangle":
+        kernel = get_kernel(kern_size)
+    elif kern_type == "cross":
+        kernel = get_kernel(kern_size, kern_type=kern_type)
+    k_const = (kern_size - 1) // 2
+    for i in range(k_const, img.shape[0]- k_const):
+        for j in range(k_const, img.shape[1] - k_const):
+            temp= img[i-k_const:i+k_const+1, j-k_const:j+k_const+1]
+            product= temp * kernel
+            img_dilate[i,j] = np.max(product)
+    return img_dilate

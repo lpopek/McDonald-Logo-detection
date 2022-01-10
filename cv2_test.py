@@ -12,7 +12,7 @@ from skimage.measure import regionprops
 import matplotlib.patches as mpatches
 # Rectangular Kernel
 
-
+import preprocessing as pr
 
 
 
@@ -41,7 +41,6 @@ cross_kernel_3x3= np.array([[0, 1, 0],
 
 def get_img(no):
     img = cv.imread(f"dataset\image_{no}.jpg")
-    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     print("image loaded")
     return img
 
@@ -95,7 +94,11 @@ def get_treshold(img, hue_center_value, hue_eps, saturation = 124):
 
 def make_binary_operations(img):
     dilation = cv.dilate(img, cross_kernel, iterations = 1)
+    print_img(dilation)
+    dilation = cv.dilate(img, cross_kernel, iterations = 1)
+    print_img(dilation)
     erosion = cv.erode(dilation, cross_kernel, iterations = 1)
+    print_img(erosion)
     return erosion
 
 
@@ -125,8 +128,9 @@ def main():
     #print_img(img_0)
     for i in range(0, 15):
         base_img = get_img(i)
-        img = cv.cvtColor(base_img, cv.COLOR_RGB2HSV)
-        img = resize_picture(img)
+        img = resize_picture(base_img)
+        img = pr.convert_BGR2HSV(img)
+        
         # img_gray = converse_RGB2GRAY_SCALE(img)
         # print_img(img_gray, "w skali szarości", gray_scale_flag=True)
         img_tresholded = get_treshold(img, 22, 8)
