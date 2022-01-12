@@ -13,8 +13,8 @@ import matplotlib.patches as mpatches
 # Rectangular Kernel
 
 import preprocessing as pr
-
-
+import segmentation as seg
+import data_backend_operations as db
 
 rectangle_kernel = np.array([[1, 1, 1, 1, 1],
                             [1, 1, 1, 1, 1],
@@ -132,8 +132,9 @@ def main():
         # print_img(img_gray, "w skali szarości", gray_scale_flag=True)
         img_tresholded = get_treshold(img, 22, 8)
         img = make_binary_operations(img_tresholded)
-        seg = segmentation(img_tresholded)
-        mark_regions(img_tresholded, seg)
+        img_segmented, seg_no = seg.get_segments(img_tresholded)
+        print(seg_no)
+        db.print_img(img_segmented)
         
 
 

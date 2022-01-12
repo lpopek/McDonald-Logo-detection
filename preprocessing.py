@@ -29,7 +29,7 @@ def invert_opencv_split(img):
     b, g, r = cv.split(img)
     return cv.merge(r, g, b)
 
-def convert_RGB2GRAY(img):
+def convert_BGR2GRAY(img):
     h, w, c= img.shape
     img_gray = np.zeros((h, w), dtype=np.uint8)
     i, j  = 0, 0
@@ -39,7 +39,7 @@ def convert_RGB2GRAY(img):
             j += 1
         i += 1
         j = 0
-    print("image converted from RGB to GRAY")
+    print("image converted from BGR to GRAY")
     return img_gray
 
 def convert_BGR2HSV(img, is_RGB = False):
@@ -72,7 +72,7 @@ def convert_BGR2HSV(img, is_RGB = False):
             j += 1
         i += 1
         j = 0
-    print("image converted from RGB to HSV")
+    print("image converted from BGR to HSV")
     return hsv_img
 
 def get_treshold(img, hue_center_value, hue_eps, saturation = 124):
