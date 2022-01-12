@@ -7,5 +7,7 @@ def main():
 
 
 if __name__ == "__main__":
+    li = []
+    li[1]
     main()
 
