@@ -2,15 +2,10 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
-def get_image_from_dataset(image_path):
-    img = cv.imread(image_path)
-    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-    print("image loaded")
-    return img
+
 
 def get_img_from_dataset(no):
     img = cv.imread(f"dataset\image_{no}.jpg")
-    img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     print("image loaded")
     return img
 

@@ -12,10 +12,10 @@ def get_extremal_channel_value(channel_1, channel_2, is_max = True):
         return min_c2 if min_c2 < min_c1 else min_c1
 
 
-def get_kernel(size, rec_type="rectangle"):
-    if rec_type == "rectangle":
+def get_kernel(size, kern_type="rectangle"):
+    if kern_type == "rectangle":
         return np.ones((size, size), dtype=np.uint8)
-    elif rec_type == "cross":
+    elif kern_type == "cross":
         kernel = np.zeros((size, size), dtype=np.uint8)
         mid = size // 2
         for row in kernel:
@@ -98,7 +98,7 @@ def erode_img(img, kern_size=7,  kern_type="rectangle"):
     img_erode = np.zeros(img.shape, dtype=np.uint8)
     for i in range(k_const, img.shape[0] - k_const):
         for j in range(k_const, img.shape[1] - k_const):
-            temp= img[i-k_const:i+k_const+1, j-k_const:j+k_const+1]
+            temp = img[i-k_const:i+k_const+1, j-k_const:j+k_const+1]
             product= temp * kernel
             img_erode[i,j]= np.min(product)
     return img_erode
@@ -112,7 +112,15 @@ def dilate_img(img, kern_size=7,  kern_type="rectangle"):
     k_const = (kern_size - 1) // 2
     for i in range(k_const, img.shape[0]- k_const):
         for j in range(k_const, img.shape[1] - k_const):
-            temp= img[i-k_const:i+k_const+1, j-k_const:j+k_const+1]
-            product= temp * kernel
+            temp = img[i-k_const:i+k_const+1, j-k_const:j+k_const+1]
+            product = temp * kernel
             img_dilate[i,j] = np.max(product)
     return img_dilate
+
+
+def make_binary_operations(img):
+    dilated_image = dilate_img(img)
+    #dilated_image_cros = dilate_img(dilated_image, kern_type= "cross")
+    eroded_img = erode_img(dilated_image)
+    print("closing operation")
+    return eroded_img

@@ -16,17 +16,20 @@ class Node:
 
 def get_segments(img_preproceessed, min_pix=100, min_pixel_flag = True):
     img_normalised = img_preproceessed / np.amax(img_preproceessed)
+    segment_list = []
     seg_description_val = 2
     for row in range(img_normalised.shape[0]):
         for col in range(img_normalised.shape[1]):
             if img_normalised[row][col] == 1: 
-                img_normalised, is_new_segm_added = get_flood_fill_alg(img_normalised, row, col, seg_description_val,\
+                img_normalised, is_new_segm_added, new_seg = get_flood_fill_alg(img_normalised,\
+                     row, col, seg_description_val,\
                      min_pixels=min_pix, min_pix_flag=min_pixel_flag)
                 if is_new_segm_added is True:
                     seg_description_val += 1
+                    segment_list.append(new_seg)
             else:
                 pass
-    return img_normalised, seg_description_val - 2
+    return img_normalised, seg_description_val - 2, segment_list
 
 
 def get_flood_fill_alg(img_matrix, row, col, class_color, min_pixels=100, min_pix_flag=False):
@@ -47,13 +50,13 @@ def get_flood_fill_alg(img_matrix, row, col, class_color, min_pixels=100, min_pi
                     Q.put(n_node)
     if min_pix_flag:
         if len(shifted_pix) > min_pixels:
-            return img_matrix, True
+            return img_matrix, True, shifted_pix
         else:
             for node in shifted_pix:
                 img_matrix[node.row][node.col] = 0
-            return img_matrix, False
+            return img_matrix, False, None
     else:
-        return img_matrix, True
+        return img_matrix, True, []
 
 
 def get_pixel_to_node(img_matrix, row, col):
@@ -61,4 +64,17 @@ def get_pixel_to_node(img_matrix, row, col):
         return Node(row, col, img_matrix[row][col])
     else:
         return None
+
+def take_row_node(node):
+    return node.row
+
+def take_col_node(node):
+    return node.col
+
+def determine_extreme_points_seg(segment):
+    seg_sort_row = sorted(segment, key=take_row_node)
+    seg_sort_col = sorted(segment, key=take_col_node)
+
+    return (seg_sort_col[0].col, seg_sort_row[0].row),\
+          (seg_sort_col[-1].col, seg_sort_row[-1].row)
 

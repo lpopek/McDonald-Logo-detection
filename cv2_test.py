@@ -39,10 +39,6 @@ cross_kernel_3x3= np.array([[0, 1, 0],
                             [0, 1, 0]], dtype=np.uint8)
 
 
-def get_img(no):
-    img = cv.imread(f"dataset\image_{no}.jpg")
-    print("image loaded")
-    return img
 
 def resize_picture(img, scale_percent=20):
     print('Original Dimensions : ',img.shape)
