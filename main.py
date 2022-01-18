@@ -24,6 +24,6 @@ if __name__ == "__main__":
         # db.print_img(img_segmented, title="Obraz po segemntacji")
         for segment in segments:
             point_min, point_max = seg.determine_extreme_points_seg(segment)
-            print(point_min, point_max)
+
             img_ = cv.rectangle(img_, point_min, point_max, color=(255, 0, 0), thickness=2)
         db.print_img(img_, "Zaznaczone bboxy")

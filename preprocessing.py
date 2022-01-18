@@ -124,3 +124,20 @@ def make_binary_operations(img):
     eroded_img = erode_img(dilated_image)
     print("closing operation")
     return eroded_img
+
+def Sobel_filter(img, is_BGR = False):
+    kernel_X = np.array([-1, 0, 1],\
+                        [-2, 0, 2],\
+                        [-1, 0, 1])
+
+
+    kernel_Y = np.array([1,  2,  1],\
+                        [0,  0,  0],\
+                        [-1, -2, -1])
+    if is_BGR is not True:
+        for i in range(1, img.shape[0] - 1):
+            for j in range(1, img.shape[1] - 1):
+                temp = img[i-1:i+2, j-1:j+2]
+                x_prod = temp * kernel_X
+                y_prod = temp * kernel_Y
+                new_value = np.sqrt(x_prod**2 + y_prod **2)

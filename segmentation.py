@@ -13,6 +13,9 @@ class Node:
     def __str__(self):
         return f"Row: {self.row} Column = {self.col} Color = {self.cls}" 
 
+    def __eq__(self, other):
+        return ((self.row, self.col, self.cls) == (other.row, other.col, other.cls))
+
 
 def get_segments(img_preproceessed, min_pix=100, min_pixel_flag = True):
     img_normalised = img_preproceessed / np.amax(img_preproceessed)
