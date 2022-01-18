@@ -1,5 +1,5 @@
 import numpy as np
-
+from Node import Node
 dict_trans = {
     0:0,
     1:1,
@@ -14,8 +14,20 @@ dict_trans = {
 def get_matrix_around_pixel(bbox_image, point):
     row, col = point[0], point[1]
     if 0 < row < bbox_image.shape[0] - 1 and 0 < col < bbox_image.shape[1] - 1:
-        M = bbox_image[row - 1: row + 2, col - 1: col + 2]
         return bbox_image[row - 1: row + 2, col - 1: col + 2]
+    else:
+        return None
+
+def get_Node_matrix_around_pixel(bbox_image, row, col):
+    M = []
+    k = 0
+    if 0 < row < bbox_image.shape[0] - 1 and 0 < col < bbox_image.shape[1] - 1:
+        for i in range(row - 1, row + 2):
+            M.append([])
+            for j in range(col - 1, col + 2):
+                M[k].append(Node(i, j, bbox_image[i][j]))
+            k += 1
+        return np.array(M)
     else:
         return None
 
@@ -27,15 +39,22 @@ def augment_black_border(bbox_image):
     bordered_img = np.zeros((bbox_image.shape[0] + 2, bbox_image.shape[1] + 2))
     bordered_img[1:-1, 1:-1] = bbox_image
     return bordered_img
-
-def get_rotation():
-    pass
         
 def get_cord_from_M_position(i, j, M):
     pass
 
-
-
+def get_rotation_from_direction(c, p):
+    vec = [c.row - p.row, c.col - p.col]
+    if vec[0] > 0 and vec[1] == 0:
+        return 5
+    elif vec[0] < 0 and vec[1] == 0:
+        return 1
+    elif vec[0] == 0 and vec[1] > 0:
+        return 7
+    elif vec[0] == 0 and vec[1] < 0:
+        return 3
+    else:
+        raise ValueError()
 
 def get_Moore_Neighborhood_countour(bbox_image, ann):
     bbox_image = augment_black_border(bbox_image)
@@ -47,7 +66,7 @@ def get_Moore_Neighborhood_countour(bbox_image, ann):
         for pix in row:
             if pix == ann:
                 bbox_image[i][j] = 1
-                s = (i, j)
+                s = Node(i, j, 1)
                 border.append(s)
                 p = s
                 perimeter += 1
@@ -71,7 +90,7 @@ def get_Moore_Neighborhood_countour(bbox_image, ann):
                 prev_step = m
 
 
-    
+
 
     # return coutour_img, perimeter
 

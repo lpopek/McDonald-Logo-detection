@@ -1,10 +1,11 @@
+from re import A
 import unittest
 import cv2 as cv
 import numpy as np
 from numpy.lib.index_tricks import nd_grid
 from cv2_test import print_img, segmentation
 import data_backend_operations as db
-
+from Node import Node 
 
 IMG = cv.imread("test\\test.png")
 
@@ -122,13 +123,18 @@ class TestClassificationMethods(unittest.TestCase):
                         [0, 0, 1, 1, 0],\
                         [1, 1, 1, 1, 0]])
         mat_1 = cls.get_Node_matrix_around_pixel(mat, 2, 2)
-        mat_ = np.array([[seg.Node(0, 0, 1), seg.Node(0, 1, 0), seg.Node(0, 2, 0)]\
-                        ,[seg.Node(1, 0, 1), seg.Node(1, 1, 0), seg.Node(1, 2, 0)]\
-                        ,[seg.Node(2, 0, 0), seg.Node(2, 1, 1), seg.Node(2, 2, 1)]])
-        try:
-            np.testing.assert_equal(mat_1, mat_)
-        except AssertionError:
-            print("Unequal matrixes.")
+        mat_ = np.array([[Node(1, 1, 1), Node(1, 2, 0), Node(1, 3, 0)]\
+                        ,[Node(2, 1, 1), Node(2, 2, 0), Node(2, 3, 0)]\
+                        ,[Node(3, 1, 0), Node(3, 2, 1), Node(3, 3, 1)]])
+        self.assertEqual(mat_1[0][0], mat_[0][0])
+        self.assertEqual(mat_1[1][1], mat_[1][1])
+        self.assertEqual(mat_1[2][2], mat_[2][2])
+
+    def test_get_rotation_from_direction(self):
+        p_1 = Node(1, 1, 2)
+        c_1 = Node(1, 0, 0)
+        self.assertEqual(cls.get_rotation_from_direction(c_1, p_1), 7)
+
 
     def test_get_clockwise_list_from_matrix(self):
         mat = np.resize(np.arange(10), (3,3))
