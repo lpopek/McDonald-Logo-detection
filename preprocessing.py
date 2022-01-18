@@ -120,7 +120,6 @@ def dilate_img(img, kern_size=7,  kern_type="rectangle"):
 
 def make_binary_operations(img):
     dilated_image = dilate_img(img)
-    #dilated_image_cros = dilate_img(dilated_image, kern_type= "cross")
     eroded_img = erode_img(dilated_image)
     print("closing operation")
     return eroded_img

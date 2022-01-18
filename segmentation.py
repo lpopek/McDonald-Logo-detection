@@ -69,3 +69,7 @@ def determine_extreme_points_seg(segment):
     return (seg_sort_col[0].col, seg_sort_row[0].row),\
           (seg_sort_col[-1].col, seg_sort_row[-1].row)
 
+def crop_segment(img, segment):
+    p1, p2 = determine_extreme_points_seg(segment)
+    return img[p1.row:p2.row, p1.col:p2.col]
+

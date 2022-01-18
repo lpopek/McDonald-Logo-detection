@@ -160,16 +160,42 @@ class TestClassificationMethods(unittest.TestCase):
                         [0, 0, 0, 0, 0, 0, 0]])
         p_1 = Node(1, 3, 2)
         c_1 = Node(1, 2, 0)
-
-        c_2, p_2 = cls.search_neigbourhood(p_1, c_1, mat, 2)
-        c_2_, p_2_ = Node(0, 4, 0), Node(1, 4, 2)
+        s = Node(1, 3, 2)
+        c_2, p_2, to_continue = cls.search_neigbourhood(p_1, c_1, s, mat, 2)
+        c_2_, p_2_= Node(0, 4, 0), Node(1, 4, 2)
         self.assertEqual(c_2, c_2_)
         self.assertEqual(p_2, p_2_)
-
-        c_3, p_3 = cls.search_neigbourhood(p_2, c_2, mat, 2)
-        c_3_, p_3_ = Node(0, 5, 0), Node(1, 5, 2)
+        self.assertTrue(to_continue)
+        c_3, p_3, to_continue = cls.search_neigbourhood(p_2, c_2, s, mat, 2)
+        c_3_, p_3_ = Node(0, 5, 0), Node(1, 5, 2), 
         self.assertEqual(c_3, c_3_)
         self.assertEqual(p_3, p_3_)
+        self.assertTrue(to_continue)
+
+
+    def test_get_Moore_Neighborhood_countour(self):
+        mat = np.array([[0, 0, 0, 0, 0, 0, 0],\
+                        [0, 0, 0, 2, 2, 2, 0],\
+                        [0, 2, 2, 2, 2, 2, 0],\
+                        [0, 2, 2, 2, 0, 0, 0],\
+                        [0, 2, 2, 2, 0, 0, 0],\
+                        [0, 0, 2, 2, 2, 0, 0],\
+                        [0, 0, 0, 0, 0, 0, 0]])
+        mat_ = np.array([[0, 0, 0, 0, 0, 0, 0],\
+                         [0, 0, 0, 1, 1, 1, 0],\
+                         [0, 1, 1, 2, 1, 1, 0],\
+                         [0, 1, 2, 1, 0, 0, 0],\
+                         [0, 1, 2, 1, 0, 0, 0],\
+                         [0, 0, 1, 1, 1, 0, 0],\
+                         [0, 0, 0, 0, 0, 0, 0]])
+        
+        mat, perimeter, border = cls.get_Moore_Neighborhood_countour(mat, 2)
+        self.assertEqual(perimeter, 14)
+        self.assertEqual(1, 1.0)
+        try:
+            np.testing.assert_equal(mat, mat_)
+        except AssertionError:
+            print("Unequal lists. Bad border extraction")
 
 
 if __name__ == '__main__':

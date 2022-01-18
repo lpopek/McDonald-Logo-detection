@@ -1,15 +1,5 @@
 import numpy as np
 from Node import Node
-dict_trans = {
-    0:0,
-    1:1,
-    2:2,
-    3:5,
-    4:8,
-    5:7,
-    6:6,
-    7:3
-}
 
 def get_matrix_around_pixel(bbox_image, point):
     row, col = point[0], point[1]
@@ -40,9 +30,11 @@ def augment_black_border(bbox_image):
     bordered_img[1:-1, 1:-1] = bbox_image
     return bordered_img
 
+
+
 def get_rotation_from_direction(c, p):
     """
-    Get rotation value for M neigjbourhood list from direction of vector pointing from p -> c
+    Get rotation value for M neighbourhood list from direction of vector pointing from p -> c
     """
     vec = [c.row - p.row, c.col - p.col]
     if vec[0] > 0 and vec[1] == 0:
@@ -56,16 +48,18 @@ def get_rotation_from_direction(c, p):
     else:
         raise ValueError()
 
-def search_neigbourhood(p, c, bbox_image, ann):
+def search_neigbourhood(p, c, s, bbox_image, ann):
     M = get_Node_matrix_around_pixel(bbox_image, p.row, p.col)
     rot = get_rotation_from_direction(c, p)
     M_list = get_clockwise_list_from_matrix(M, rot)
     for m in M_list:
+        if m == s:
+            return c, p, False
         if m.cls == ann:
             p_new = m
             break
         c_new = m
-    return c_new, p_new
+    return c_new, p_new, True
 
 def get_Moore_Neighborhood_countour(bbox_image, ann):
     bbox_image = augment_black_border(bbox_image)
@@ -80,26 +74,22 @@ def get_Moore_Neighborhood_countour(bbox_image, ann):
                 s = Node(i, j, 1)
                 border.append(s)
                 p = s
-                perimeter += 1
                 break
             j += 1
         else:
             i += 1
+            j = 0 
             continue
         break
     if p is not None:
         c = Node(i, j - 1, bbox_image[i][j - 1])
-        while s != c:
-            c, p = search_neigbourhood(p, c, bbox_image, ann)
+        continue_flag = True
+        while continue_flag:
+            c, p, continue_flag = search_neigbourhood(p, c, s, bbox_image, ann)
             bbox_image[p.row][p.col] = 1
             border.append(p)
             perimeter += 1
-
-    return bbox_image, perimeter, border
-
-def get_perimeter(bbox_image, annotation):
-    pass
-
+    return bbox_image[1:-1, 1:-1], perimeter, border
 
 def get_area(bbox_image):
     area = 0
