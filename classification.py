@@ -39,22 +39,33 @@ def augment_black_border(bbox_image):
     bordered_img = np.zeros((bbox_image.shape[0] + 2, bbox_image.shape[1] + 2))
     bordered_img[1:-1, 1:-1] = bbox_image
     return bordered_img
-        
-def get_cord_from_M_position(i, j, M):
-    pass
 
 def get_rotation_from_direction(c, p):
+    """
+    Get rotation value for M neigjbourhood list from direction of vector pointing from p -> c
+    """
     vec = [c.row - p.row, c.col - p.col]
     if vec[0] > 0 and vec[1] == 0:
         return 5
     elif vec[0] < 0 and vec[1] == 0:
         return 1
     elif vec[0] == 0 and vec[1] > 0:
-        return 7
-    elif vec[0] == 0 and vec[1] < 0:
         return 3
+    elif vec[0] == 0 and vec[1] < 0:
+        return 7
     else:
         raise ValueError()
+
+def search_neigbourhood(p, c, bbox_image, ann):
+    M = get_Node_matrix_around_pixel(bbox_image, p.row, p.col)
+    rot = get_rotation_from_direction(c, p)
+    M_list = get_clockwise_list_from_matrix(M, rot)
+    for m in M_list:
+        if m.cls == ann:
+            p_new = m
+            break
+        c_new = m
+    return c_new, p_new
 
 def get_Moore_Neighborhood_countour(bbox_image, ann):
     bbox_image = augment_black_border(bbox_image)
@@ -77,22 +88,14 @@ def get_Moore_Neighborhood_countour(bbox_image, ann):
             continue
         break
     if p is not None:
-        M = get_matrix_around_pixel(bbox_image, p)
-        c_val = M[1][0]
-        c = (i, j - 1)
+        c = Node(i, j - 1, bbox_image[i][j - 1])
         while s != c:
-            M_list  = get_clockwise_list_from_matrix(M, 0)
-            for m in M_list:
-                if m == ann:
-                    border.append(c)
-                    perimeter += 1
-                    break
-                prev_step = m
+            c, p = search_neigbourhood(p, c, bbox_image, ann)
+            bbox_image[p.row][p.col] = 1
+            border.append(p)
+            perimeter += 1
 
-
-
-
-    # return coutour_img, perimeter
+    return bbox_image, perimeter, border
 
 def get_perimeter(bbox_image, annotation):
     pass
