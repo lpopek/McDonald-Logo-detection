@@ -81,13 +81,11 @@ class TestSegmentationMethods(unittest.TestCase):
             self.assertEqual(seg_no, 3)
         except AssertionError:
             print("Wrong number of segments")
-
-import classification as cls
-class TestClassificationMethods(unittest.TestCase):
+    
     def test_get_matrix_around_pixel(self):
         mat = np.array([[0, 0, 1, 1, 1], [0, 1, 0, 1, 0], [0, 1, 0, 0, 0], [0, 0, 1, 1, 0], [1, 1, 1, 1, 0]])
-        mat_1 = cls.get_matrix_around_pixel(mat, (2, 2))
-        mat_2 = cls.get_matrix_around_pixel(mat, (0, 0))
+        mat_1 = seg.get_matrix_around_pixel(mat, (2, 2))
+        mat_2 = seg.get_matrix_around_pixel(mat, (0, 0))
         mat_ = np.array([[1, 0, 1], [1, 0 , 0], [0, 1, 1]])
         try:
             np.testing.assert_equal(mat_1, mat_)
@@ -102,7 +100,7 @@ class TestClassificationMethods(unittest.TestCase):
                         [0, 0, 1, 1, 0],
                         [1, 1, 1, 1, 0]])
 
-        mat = cls.augment_black_border(mat)
+        mat = seg.augment_black_border(mat)
         mat_ = np.array([[0, 0, 0, 0, 0, 0, 0],\
                          [0, 0, 0, 1, 1, 1, 0],\
                          [0, 0, 1, 0, 1, 0, 0],\
@@ -122,7 +120,7 @@ class TestClassificationMethods(unittest.TestCase):
                         [0, 1, 0, 0, 0],\
                         [0, 0, 1, 1, 0],\
                         [1, 1, 1, 1, 0]])
-        mat_1 = cls.get_Node_matrix_around_pixel(mat, 2, 2)
+        mat_1 = seg.get_Node_matrix_around_pixel(mat, 2, 2)
         mat_ = np.array([[Node(1, 1, 1), Node(1, 2, 0), Node(1, 3, 0)]\
                         ,[Node(2, 1, 1), Node(2, 2, 0), Node(2, 3, 0)]\
                         ,[Node(3, 1, 0), Node(3, 2, 1), Node(3, 3, 1)]])
@@ -133,17 +131,17 @@ class TestClassificationMethods(unittest.TestCase):
     def test_get_rotation_from_direction(self):
         p_1 = Node(1, 1, 2)
         c_1 = Node(1, 0, 0)
-        self.assertEqual(cls.get_rotation_from_direction(c_1, p_1), 7)
-        self.assertEqual(cls.get_rotation_from_direction(p_1, c_1), 3)
+        self.assertEqual(seg.get_rotation_from_direction(c_1, p_1), 7)
+        self.assertEqual(seg.get_rotation_from_direction(p_1, c_1), 3)
 
         p_1 = Node(1, 1, 2)
         c_1 = Node(2, 1, 0)
-        self.assertEqual(cls.get_rotation_from_direction(c_1, p_1), 5)
-        self.assertEqual(cls.get_rotation_from_direction(p_1, c_1), 1)
+        self.assertEqual(seg.get_rotation_from_direction(c_1, p_1), 5)
+        self.assertEqual(seg.get_rotation_from_direction(p_1, c_1), 1)
 
     def test_get_clockwise_list_from_matrix(self):
         mat = np.resize(np.arange(10), (3,3))
-        mat = cls.get_clockwise_list_from_matrix(mat, 2)
+        mat = seg.get_clockwise_list_from_matrix(mat, 2)
         mat_ = np.array([2, 5, 8, 7, 6, 3, 0, 1])
         try:
             np.testing.assert_equal(mat, mat_)
@@ -161,17 +159,16 @@ class TestClassificationMethods(unittest.TestCase):
         p_1 = Node(1, 3, 2)
         c_1 = Node(1, 2, 0)
         s = Node(1, 3, 2)
-        c_2, p_2, to_continue = cls.search_neigbourhood(p_1, c_1, s, mat, 2)
+        c_2, p_2, to_continue = seg.search_neigbourhood(p_1, c_1, s, mat, 2)
         c_2_, p_2_= Node(0, 4, 0), Node(1, 4, 2)
         self.assertEqual(c_2, c_2_)
         self.assertEqual(p_2, p_2_)
         self.assertTrue(to_continue)
-        c_3, p_3, to_continue = cls.search_neigbourhood(p_2, c_2, s, mat, 2)
+        c_3, p_3, to_continue = seg.search_neigbourhood(p_2, c_2, s, mat, 2)
         c_3_, p_3_ = Node(0, 5, 0), Node(1, 5, 2), 
         self.assertEqual(c_3, c_3_)
         self.assertEqual(p_3, p_3_)
         self.assertTrue(to_continue)
-
 
     def test_get_Moore_Neighborhood_countour(self):
         mat = np.array([[0, 0, 0, 0, 0, 0, 0],\
@@ -189,13 +186,17 @@ class TestClassificationMethods(unittest.TestCase):
                          [0, 0, 1, 1, 1, 0, 0],\
                          [0, 0, 0, 0, 0, 0, 0]])
         
-        mat, perimeter, border = cls.get_Moore_Neighborhood_countour(mat, 2)
+        mat, perimeter, border = seg.get_Moore_Neighborhood_countour(mat, 2)
         self.assertEqual(perimeter, 14)
         self.assertEqual(1, 1.0)
         try:
             np.testing.assert_equal(mat, mat_)
         except AssertionError:
             print("Unequal lists. Bad border extraction")
+
+import classification as cls
+class TestClassificationMethods(unittest.TestCase):
+    pass
 
 
 if __name__ == '__main__':
