@@ -58,21 +58,37 @@ class TestPreprocessingMethods(unittest.TestCase):
 import segmentation as seg
 class TestSegmentationMethods(unittest.TestCase):
     #TODO naprawić testy o maja błedne argumenty i 
-    @unittest.skip("test not verified")
     def test_flood_fill_algorithm(self):
-        mat = np.array([[0, 0, 1, 1, 1], [0, 1, 0, 1, 0], [0, 1, 0, 1, 0], [0, 0, 1, 1, 0], [1, 1, 1, 1, 0]])
-        mat = seg.get_flood_fill_alg(mat, 0, 2, 2)
-        mat_ = np.array([[0, 0, 2, 2, 2], [0, 1, 0, 2, 0], [0, 1, 0, 2, 0], [0, 0, 2, 2, 0], [2, 2, 2, 2, 0]])
+        mat = np.array([[0, 0, 1, 1, 1],
+                        [0, 1, 0, 1, 0],
+                        [0, 1, 0, 1, 0],
+                        [0, 0, 1, 1, 0],
+                        [1, 1, 1, 1, 0]])
+        mat, _, __ = seg.get_flood_fill_alg(mat, 0, 2, 2)
+        mat_ = np.array([[0, 0, 2, 2, 2],
+                         [0, 1, 0, 2, 0],
+                         [0, 1, 0, 2, 0],
+                         [0, 0, 2, 2, 0],
+                         [2, 2, 2, 2, 0]])
         try:
-            np.testing.assert_equal(mat, mat_, err_msg="Assertion failed")
+            np.testing.assert_equal(mat, mat_, err_msg="Assertion failed. flood fill algorithm not working")
             self.assertTrue(True)
         except AssertionError:
             print("Assertion failed")
-    @unittest.skip("test not verified")
+    
+    # @unittest.skip("test not verified")
     def test_segmentation(self):
-        mat = np.array([[0, 0, 1, 1, 1], [0, 1, 0, 1, 0], [0, 1, 0, 0, 0], [0, 0, 1, 1, 0], [1, 1, 1, 1, 0]])
-        mat, seg_no = seg.get_segments(mat)
-        mat_ = np.array([[0, 0, 2, 2, 2], [0, 3, 0, 2, 0], [0, 3, 0, 0, 0], [0, 0, 4, 4, 0], [4, 4, 4, 4, 0]])
+        mat = np.array([[0, 0, 1, 1, 1],
+                        [0, 1, 0, 1, 0],
+                        [0, 1, 0, 0, 0],
+                        [0, 0, 1, 1, 0],
+                        [1, 1, 1, 1, 0]])
+        mat, seg_no, _ = seg.get_segments(mat)
+        mat_ = np.array([[0, 0, 2, 2, 2],
+                         [0, 3, 0, 2, 0],
+                         [0, 3, 0, 0, 0],
+                         [0, 0, 4, 4, 0],
+                         [4, 4, 4, 4, 0]])
         try:
             np.testing.assert_equal(mat, mat_)
         except AssertionError:
@@ -83,10 +99,16 @@ class TestSegmentationMethods(unittest.TestCase):
             print("Wrong number of segments")
     
     def test_get_matrix_around_pixel(self):
-        mat = np.array([[0, 0, 1, 1, 1], [0, 1, 0, 1, 0], [0, 1, 0, 0, 0], [0, 0, 1, 1, 0], [1, 1, 1, 1, 0]])
+        mat = np.array([[0, 0, 1, 1, 1],
+                        [0, 1, 0, 1, 0],
+                        [0, 1, 0, 0, 0],
+                        [0, 0, 1, 1, 0],
+                        [1, 1, 1, 1, 0]])
         mat_1 = seg.get_matrix_around_pixel(mat, (2, 2))
         mat_2 = seg.get_matrix_around_pixel(mat, (0, 0))
-        mat_ = np.array([[1, 0, 1], [1, 0 , 0], [0, 1, 1]])
+        mat_ = np.array([[1, 0, 1],
+                         [1, 0 , 0],
+                         [0, 1, 1]])
         try:
             np.testing.assert_equal(mat_1, mat_)
         except AssertionError:
