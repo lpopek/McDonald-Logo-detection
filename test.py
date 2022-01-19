@@ -76,7 +76,7 @@ class TestSegmentationMethods(unittest.TestCase):
         except AssertionError:
             print("Assertion failed")
     
-    # @unittest.skip("test not verified")
+    @unittest.skip("test not verified")
     def test_segmentation(self):
         mat = np.array([[0, 0, 1, 1, 1],
                         [0, 1, 0, 1, 0],

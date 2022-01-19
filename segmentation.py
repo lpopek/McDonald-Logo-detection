@@ -16,8 +16,8 @@ def get_segments(img_preproceessed, min_pix=100, min_pixel_flag = True):
                      row, col, seg_description_val,\
                      min_pixels=min_pix, min_pix_flag=min_pixel_flag)
                 if is_new_segm_added is True:
+                    segment_list.append({"cordinates":new_seg, "key": seg_description_val})
                     seg_description_val += 1
-                    segment_list.append(new_seg)
             else:
                 pass
     return img_normalised, seg_description_val - 2, segment_list
@@ -71,7 +71,7 @@ def determine_extreme_points_seg(segment):
 
 def crop_segment(img, segment):
     p1, p2 = determine_extreme_points_seg(segment)
-    return img[p1.row:p2.row, p1.col:p2.col]
+    return img[p1[1]:p2[1], p1[0]:p2[0]]
 
 def get_matrix_around_pixel(bbox_image, point):
     row, col = point[0], point[1]
@@ -140,8 +140,8 @@ def get_Moore_Neighborhood_countour(bbox_image, ann):
     for row in bbox_image:
         for pix in row:
             if pix == ann:
-                bbox_image[i][j] = 1
-                s = Node(i, j, 1)
+                #bbox_image[i][j] = 1
+                s = Node(i, j, ann)
                 border.append(s)
                 p = s
                 break
@@ -156,7 +156,9 @@ def get_Moore_Neighborhood_countour(bbox_image, ann):
         continue_flag = True
         while continue_flag:
             c, p, continue_flag = search_neigbourhood(p, c, s, bbox_image, ann)
-            bbox_image[p.row][p.col] = 1
+            #bbox_image[p.row][p.col] = 1
             border.append(p)
             perimeter += 1
+        for node in border:
+            bbox_image[node.row][node.col] = 1
     return bbox_image[1:-1, 1:-1], perimeter, border
