@@ -59,7 +59,7 @@ def detect_logo(base_img,  show_step_pictures=False, save=False):
 def main(argv):
     argumentList = sys.argv[1:]
 
-    options = "hinds"
+    options = "hi:n:ds"
     long_options = ["Help", "Image", "Dataset_number", ]
     display_steps = False
     img = None
@@ -67,25 +67,23 @@ def main(argv):
     img_loaded = False
     save_flag = False
     try:
-        # Parsing argument
         arguments, values = getopt.getopt(argumentList, options, long_options)
-        
-        # checking each argument
         for currentArgument, currentValue in arguments:
             if currentArgument in ("-h", "--Help"):
-                print ("-i <inputimage> \n\
-                        -n <number_from_ds> - make detection from exaples \n\
+                print ("\
+                        -i <inputimage> \n\
+                        -n <number_from_dataset> - make detection from exaples \n\
                         -d <bool> - display steps during detection \n\
                         -h -display help \n\
                         -s -save detection result to .png\n")
                 sys.exit()
             elif currentArgument in ("-i", "--Image"):
-                print ("Loading image: ", sys.argv[1])
+                print ("Loading image: ", currentValue)
                 img = cv.imread(currentValue)
                 img_loaded = True
             elif currentArgument in ("-n", "--Dataset_number"):
-                print ("Loading image from dataset number: ", sys.argv[1])
-                n = currentValue
+                print ("Loading image from dataset number: ", currentValue)
+                n = int(currentValue)
                 if n > 15 and n < -1:
                     print("wrong number")
                     sys.exit()
@@ -94,18 +92,25 @@ def main(argv):
             elif currentArgument in ("-s", "--Save"):
                 save_flag = True
         if img_loaded:
-            detect_logo(img, show_step_pictures=display_steps, save=save_flag)
+            if detect_logo(img, show_step_pictures=display_steps, save=save_flag) == 0:    
+                input("Processing finished. Press Enter to continue...")
+            else:
+                input("No config file. Press Enter to continue...")
             sys.exit()
         img = db.get_img_from_dataset(n)
         if img is not None:
-            detect_logo(img, show_step_pictures=display_steps, save=save_flag)
+            if detect_logo(img, show_step_pictures=display_steps, save=save_flag) == 0:    
+                input("Processing finished. Press Enter to continue...")
+            else:
+                input("No config file. Press Enter to continue...")
             sys.exit()
         else:
             print("No image loaded")
-
+            input("Processing finished. Press Enter to continue...")
     
     except getopt.error as err:
         print (str(err))
+        input("Press Enter to continue...")
 
 
 if __name__ == "__main__":

@@ -7,7 +7,6 @@ from random import randint
 
 def get_img_from_dataset(no):
     img = cv.imread(f"dataset\image_{no}.jpg")
-    print("image loaded")
     return img
 
 def resize_picture(img, scale_percent=20):
