@@ -30,7 +30,7 @@ if __name__ == "__main__":
             img_ = cv.rectangle(img_, point_min, point_max, color=(255, 0, 0), thickness=2)
             p1, p2 = seg.determine_extreme_points_seg(segment["cordinates"])
             segm_bbox = seg.crop_segment(img_segmented, segment["cordinates"])
-            segm_bbox, perimeter, _ = seg.get_Moore_Neighborhood_countour(segm_bbox, segment["key"])
+            segm_bbox_border, perimeter, _ = seg.get_Moore_Neighborhood_countour(segm_bbox, segment["key"])
             img_segmented[p1[1]:p2[1], p1[0]:p2[0]] = segm_bbox
 
         db.print_img(img_, "Zaznaczone bboxy")

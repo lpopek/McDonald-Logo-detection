@@ -7,7 +7,7 @@ from cv2_test import print_img, segmentation
 import data_backend_operations as db
 from Node import Node 
 
-IMG = cv.imread("test\\test.png")
+IMG = cv.imread("train_dataset\\test.png")
 
 
 import preprocessing as pr
@@ -219,7 +219,7 @@ class TestSegmentationMethods(unittest.TestCase):
 import classification as cls
 class TestClassificationMethods(unittest.TestCase):
 
-    def test_get_area(self):
+    def test_calculate_area(self):
         mat = np.array([[0, 0, 0, 0, 0, 0, 0],\
                          [0, 0, 0, 1, 1, 1, 0],\
                          [0, 1, 1, 2, 1, 1, 0],\
@@ -239,7 +239,7 @@ class TestClassificationMethods(unittest.TestCase):
                          [0, 1, 2, 1, 0, 0, 0],\
                          [0, 0, 1, 1, 1, 0, 0],\
                          [0, 0, 0, 0, 0, 0, 0]])
-        perim = cls.get_perimiter(mat)
+        perim = cls.calculate_perimiter(mat)
         self.assertEqual(perim, 14)
 
 if __name__ == '__main__':

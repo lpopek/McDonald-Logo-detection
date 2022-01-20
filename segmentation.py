@@ -5,6 +5,7 @@ import queue as q
 import data_backend_operations as db
 from Node import Node
 
+
 def get_segments(img_preproceessed, min_pix=100, min_pixel_flag = True):
     img_normalised = img_preproceessed / np.amax(img_preproceessed)
     segment_list = []
@@ -20,6 +21,7 @@ def get_segments(img_preproceessed, min_pix=100, min_pixel_flag = True):
                     seg_description_val += 1
             else:
                 pass
+    print("segmentation finished!")
     return img_normalised, seg_description_val - 2, segment_list
 
 
