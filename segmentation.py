@@ -16,7 +16,7 @@ def get_segments(img_preproceessed, min_pix=100, min_pixel_flag = True):
                      row, col, seg_description_val,\
                      min_pixels=min_pix, min_pix_flag=min_pixel_flag)
                 if is_new_segm_added is True:
-                    segment_list.append({"cordinates":new_seg, "key": seg_description_val})
+                    segment_list.append({"cordinates": new_seg, "key": seg_description_val})
                     seg_description_val += 1
             else:
                 pass

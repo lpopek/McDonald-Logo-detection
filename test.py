@@ -218,8 +218,29 @@ class TestSegmentationMethods(unittest.TestCase):
 
 import classification as cls
 class TestClassificationMethods(unittest.TestCase):
-    pass
 
+    def test_get_area(self):
+        mat = np.array([[0, 0, 0, 0, 0, 0, 0],\
+                         [0, 0, 0, 1, 1, 1, 0],\
+                         [0, 1, 1, 2, 1, 1, 0],\
+                         [0, 1, 2, 1, 0, 0, 0],\
+                         [0, 1, 2, 1, 0, 0, 0],\
+                         [0, 0, 1, 1, 1, 0, 0],\
+                         [0, 0, 0, 0, 0, 0, 0]])
+        
+        a = cls.get_area(mat)
+        self.assertEqual(a, 17)
+
+    def test_get_perimeter(self):
+        mat = np.array([[0, 0, 0, 0, 0, 0, 0],\
+                         [0, 0, 0, 1, 1, 1, 0],\
+                         [0, 1, 1, 2, 1, 1, 0],\
+                         [0, 1, 2, 1, 0, 0, 0],\
+                         [0, 1, 2, 1, 0, 0, 0],\
+                         [0, 0, 1, 1, 1, 0, 0],\
+                         [0, 0, 0, 0, 0, 0, 0]])
+        perim = cls.get_perimiter(mat)
+        self.assertEqual(perim, 14)
 
 if __name__ == '__main__':
     unittest.main()

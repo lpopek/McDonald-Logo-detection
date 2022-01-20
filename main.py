@@ -23,7 +23,7 @@ if __name__ == "__main__":
         img_segmented, seg_no, segments = seg.get_segments(img)
         # db.print_img(img_segmented, title="Obraz po segemntacji")
         i = 0
-        print("regy for segment annotation")
+        print("ready for segment annotation")
         for segment in segments:
             point_min, point_max = seg.determine_extreme_points_seg(segment["cordinates"])
             # TODO visualise bbox function
@@ -32,10 +32,5 @@ if __name__ == "__main__":
             segm_bbox = seg.crop_segment(img_segmented, segment["cordinates"])
             segm_bbox, perimeter, _ = seg.get_Moore_Neighborhood_countour(segm_bbox, segment["key"])
             img_segmented[p1[1]:p2[1], p1[0]:p2[0]] = segm_bbox
-            if i == 20:
-                db.print_img(segm_bbox)
-                db.print_img(img_segmented)
-            i += 1
-            print(i)
 
         db.print_img(img_, "Zaznaczone bboxy")
