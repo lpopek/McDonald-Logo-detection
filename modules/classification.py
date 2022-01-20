@@ -1,6 +1,6 @@
 import numpy as np
 import cv2 as cv
-from Node import Node
+from modules.Node import Node
 
 def calculate_perimiter(bbox_image):
     perimiter = 0

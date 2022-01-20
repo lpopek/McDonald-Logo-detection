@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 import json
+from random import randint
 
 
 def get_img_from_dataset(no):
@@ -10,7 +11,7 @@ def get_img_from_dataset(no):
     return img
 
 def resize_picture(img, scale_percent=20):
-    print('Original Dimensions : ',img.shape)
+    print('original Dimensions:', img.shape)
     width = int(img.shape[1] * scale_percent / 100)
     height = int(img.shape[0] * scale_percent / 100)
     dim = (width, height)
@@ -42,10 +43,6 @@ def create_bbox(img, p_min, p_max, thickness=2, color=(255, 0, 0)):
     for i in range(p_min[1], p_max[1]):
         for j in range(p_max[0] - thickness, p_max[0]):
             img[i][j] = color
-    # img = img[p_min[1]:p_min[1] + thickness, p_min[0]:p_max[0],] = color
-    # img = img[p_max[1] - thickness:p_max[1], p_min[0]:p_max[0],] = color
-    # img = img[p_min[1]:p_max[1], p_min[0]:p_min[0] + thickness,] = color
-    # img = img[p_min[1]:p_max[1], p_max[0] - thickness:p_max[0],] = color
     return img
 
 def import_vector_for_cls():

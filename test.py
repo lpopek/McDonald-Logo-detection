@@ -1,16 +1,13 @@
-from re import A
+
 import unittest
 import cv2 as cv
 import numpy as np
-from numpy.lib.index_tricks import nd_grid
-from cv2_test import print_img, segmentation
-import data_backend_operations as db
-from Node import Node 
 
-IMG = cv.imread("train_dataset\\test.png")
+from modules.Node import Node 
+IMG = cv.imread("..\\train_dataset\\test.png")
 
 
-import preprocessing as pr
+import modules.preprocessing as pr
 @unittest.skip("test were verified")
 class TestPreprocessingMethods(unittest.TestCase):
 
@@ -55,8 +52,7 @@ class TestPreprocessingMethods(unittest.TestCase):
         except AssertionError:
             print("Operation of Erosion not working")
 
-import segmentation as seg
-@unittest.skip("test were verified")
+import modules.segmentation as seg
 class TestSegmentationMethods(unittest.TestCase):
     #TODO naprawić testy o maja błedne argumenty i 
     def test_flood_fill_algorithm(self):
@@ -217,7 +213,7 @@ class TestSegmentationMethods(unittest.TestCase):
         except AssertionError:
             print("Unequal lists. Bad border extraction")
 
-import classification as cls
+import modules.classification as cls
 @unittest.skip("test were verified")
 class TestClassificationMethods(unittest.TestCase):
 
@@ -244,7 +240,7 @@ class TestClassificationMethods(unittest.TestCase):
         perim = cls.calculate_perimiter(mat)
         self.assertEqual(perim, 14)
 
-import data_backend_operations as db
+import modules.data_backend_operations as db
 import matplotlib.pyplot as plt
 class db_tests(unittest.TestCase):
     def test_bbox_creation(self):
@@ -256,7 +252,6 @@ class db_tests(unittest.TestCase):
         mat_cv = cv.rectangle(mat_cv, p1, p2, color=(255, 0, 0), thickness=2)
         plt.imshow(mat_)
         plt.show()
-
         plt.imshow(mat_cv)
         plt.show()
 

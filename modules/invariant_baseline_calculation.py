@@ -4,7 +4,7 @@ import os
 import json
 import preprocessing as pr
 import segmentation as seg
-import classification as cls
+import modules.classification as cls
 import data_backend_operations as db
 
 def get_invariants_for_McDonalds_logo(dataset_path=None):

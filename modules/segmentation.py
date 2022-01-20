@@ -1,9 +1,8 @@
 import cv2 as cv
-from matplotlib.pyplot import xcorr
 import numpy as np
 import queue as q
-import data_backend_operations as db
-from Node import Node
+import modules.data_backend_operations as db
+from modules.Node import Node
 
 
 def get_segments(img_preproceessed, min_pix=100, min_pixel_flag = True):
