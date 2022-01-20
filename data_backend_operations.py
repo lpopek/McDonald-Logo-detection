@@ -1,3 +1,4 @@
+from tkinter.tix import Tree
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,15 +19,10 @@ def resize_picture(img, scale_percent=20):
     resized = cv.resize(img, dim, interpolation = cv.INTER_AREA)
     return resized
 
-def print_img(img, title="domyslny", gray_scale_flag = False):
-    if(not gray_scale_flag):
-        plt.title(title)
-        plt.imshow(img)
-        plt.show()
-    else:
-        plt.title(title)
-        plt.imshow(img, cmap="gray")
-        plt.show()
+def print_img(img, title="domyslny"):
+    cv.imshow(title, img)
+    cv.waitKey()
+
 
 def import_vector_for_cls():
     try:
