@@ -56,6 +56,7 @@ class TestPreprocessingMethods(unittest.TestCase):
             print("Operation of Erosion not working")
 
 import segmentation as seg
+@unittest.skip("test were verified")
 class TestSegmentationMethods(unittest.TestCase):
     #TODO naprawić testy o maja błedne argumenty i 
     def test_flood_fill_algorithm(self):
@@ -217,6 +218,7 @@ class TestSegmentationMethods(unittest.TestCase):
             print("Unequal lists. Bad border extraction")
 
 import classification as cls
+@unittest.skip("test were verified")
 class TestClassificationMethods(unittest.TestCase):
 
     def test_calculate_area(self):
@@ -241,6 +243,22 @@ class TestClassificationMethods(unittest.TestCase):
                          [0, 0, 0, 0, 0, 0, 0]])
         perim = cls.calculate_perimiter(mat)
         self.assertEqual(perim, 14)
+
+import data_backend_operations as db
+import matplotlib.pyplot as plt
+class db_tests(unittest.TestCase):
+    def test_bbox_creation(self):
+        mat = np.zeros((40, 40, 3))
+        mat_cv = np.zeros((40, 40, 3))
+        p1= (7, 7)
+        p2 =(27, 27)
+        mat_ = db.create_bbox(mat, p1, p2)
+        mat_cv = cv.rectangle(mat_cv, p1, p2, color=(255, 0, 0), thickness=2)
+        plt.imshow(mat_)
+        plt.show()
+
+        plt.imshow(mat_cv)
+        plt.show()
 
 if __name__ == '__main__':
     unittest.main()

@@ -11,7 +11,6 @@ def get_extremal_channel_value(channel_1, channel_2, is_max = True):
         min_c2 = np.amin(np.array(channel_2))
         return min_c2 if min_c2 < min_c1 else min_c1
 
-
 def get_kernel(size, kern_type="rectangle"):
     if kern_type == "rectangle":
         return np.ones((size, size), dtype=np.uint8)
@@ -24,10 +23,19 @@ def get_kernel(size, kern_type="rectangle"):
             kernel[mid][i] = 1
         return kernel
 
-
-def invert_opencv_split(img):
-    b, g, r = cv.split(img)
-    return cv.merge(r, g, b)
+def convert_BGR2RGB(img):
+    h, w, c= img.shape
+    img_rgb = np.zeros((h, w, c), dtype=np.uint8)
+    i, j  = 0, 0
+    for row in img:
+        for pix in row:
+            img_rgb[i][j][0] = pix[2]
+            img_rgb[i][j][1] = pix[1]
+            img_rgb[i][j][2] = pix[0]
+            j += 1
+        j = 0 
+        i += 1
+    return img_rgb
 
 def convert_BGR2GRAY(img):
     h, w, c= img.shape
@@ -86,7 +94,7 @@ def get_treshold(img, hue_center_value, hue_eps, saturation = 124):
             j += 1
         j = 0
         i += 1
-    print("treshold ready!")
+    print("treshold made")
     return img_tresholded
 
 def erode_img(img, kern_size=7,  kern_type="rectangle"):
@@ -117,26 +125,8 @@ def dilate_img(img, kern_size=7,  kern_type="rectangle"):
             img_dilate[i,j] = np.max(product)
     return img_dilate
 
-
 def make_binary_operations(img):
     dilated_image = dilate_img(img)
     eroded_img = erode_img(dilated_image)
     print("closing operation")
     return eroded_img
-
-def Sobel_filter(img, is_BGR = False):
-    kernel_X = np.array([-1, 0, 1],\
-                        [-2, 0, 2],\
-                        [-1, 0, 1])
-
-
-    kernel_Y = np.array([1,  2,  1],\
-                        [0,  0,  0],\
-                        [-1, -2, -1])
-    if is_BGR is not True:
-        for i in range(1, img.shape[0] - 1):
-            for j in range(1, img.shape[1] - 1):
-                temp = img[i-1:i+2, j-1:j+2]
-                x_prod = temp * kernel_X
-                y_prod = temp * kernel_Y
-                new_value = np.sqrt(x_prod**2 + y_prod **2)

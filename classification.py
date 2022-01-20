@@ -1,6 +1,3 @@
-from cgi import print_directory
-import re
-from tkinter.messagebox import RETRY
 import numpy as np
 import cv2 as cv
 from Node import Node
@@ -87,8 +84,6 @@ def check_segment(features, base_features, std_deviations):
             score += 1
         else:
             score -= 1
-    print("___________SCORE___________")
-    print(score)
     if score >= len(features) - 4:
         return True
     else:

@@ -1,7 +1,5 @@
-import matplotlib.pyplot as plt
+import copy
 import cv2 as cv
-
-
 
 import data_backend_operations as db
 import preprocessing as pr
@@ -14,20 +12,19 @@ def main(single_image=None, show_step_pictures=False, show_examples=False):
         for i in range(0, 15):
             base_img = db.get_img_from_dataset(i)
             img_ = db.resize_picture(base_img)
+            img_rgb = pr.convert_BGR2RGB(img_)
             if show_step_pictures:
-                db.print_img(img_, title="Image after resizing")
+                db.print_img(img_rgb, title="Image after resizing")
             img = pr.convert_BGR2HSV(img_)
             img_tresholded = pr.get_treshold(img, 22, 8)
             if show_step_pictures:
-                db.print_img(img_tresholded, title="Image after tresholding")
+                db.print_img(img_tresholded, title="Image after tresholding", gray_scale_flag=True)
             img_closed = pr.make_binary_operations(img_tresholded)
             if show_step_pictures:
-                db.print_img(img_closed, title="Image after closing")
-                plt.imshow(img_closed)
-                plt.show()
+                db.print_img(img_closed, title="Image after closing", gray_scale_flag=True)
             img_segmented, seg_no, segments = seg.get_segments(img_closed)
             print(f"Possible segments found: {seg_no}")
-            img__ = img_
+            img__ = copy.deepcopy(img_rgb)
             for segment in segments:
                 point_min, point_max = seg.determine_extreme_points_seg(segment["cordinates"])
                 img__ = cv.rectangle(img__, point_min, point_max, color=(255, 0, 0), thickness=2)
@@ -40,10 +37,10 @@ def main(single_image=None, show_step_pictures=False, show_examples=False):
                 features[0] = cls.calculate_Malinowska_ratio(area, perimeter)
                 is_M_logo = cls.check_segment(features, classifier_data["feature value"], classifier_data["standard deviation"])
                 if is_M_logo is True:
-                    img_ = cv.rectangle(img_, point_min, point_max, color=(0, 255, 0), thickness=2)
+                    img_rgb = db.create_bbox(img_rgb, point_min, point_max, color=(0, 0, 255), thickness=2)
             if show_step_pictures:
                 db.print_img(img__, "Annotaded bboxes for all segments")
-            db.print_img(img_, "Founded logos")
+            db.print_img(img_rgb, "Founded logos")
     else:
         print("No data for clasification uploaded")
         return 0

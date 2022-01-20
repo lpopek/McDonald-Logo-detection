@@ -1,4 +1,3 @@
-from tkinter.tix import Tree
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,10 +18,35 @@ def resize_picture(img, scale_percent=20):
     resized = cv.resize(img, dim, interpolation = cv.INTER_AREA)
     return resized
 
-def print_img(img, title="domyslny"):
-    cv.imshow(title, img)
-    cv.waitKey()
+def print_img(img, title="domyslny", gray_scale_flag=False, BGR=True):
+    if not gray_scale_flag:
+        if BGR is True:
+            plt.title(title)
+            plt.imshow(img)
+            plt.show()
+    else:
+        plt.title(title)
+        plt.imshow(img, cmap="gray")
+        plt.show()
 
+def create_bbox(img, p_min, p_max, thickness=2, color=(255, 0, 0)):
+    for i in range(p_min[0], p_max[0]):
+        for j in range(p_min[1], p_min[1] + thickness):
+            img[j][i] = color
+    for i in range(p_min[0], p_max[0]):
+        for j in range(p_max[1] - thickness, p_max[1]):
+            img[j][i] = color
+    for i in range(p_min[1], p_max[1]):
+        for j in range(p_min[0], p_min[0] + thickness):
+            img[i][j] = color
+    for i in range(p_min[1], p_max[1]):
+        for j in range(p_max[0] - thickness, p_max[0]):
+            img[i][j] = color
+    # img = img[p_min[1]:p_min[1] + thickness, p_min[0]:p_max[0],] = color
+    # img = img[p_max[1] - thickness:p_max[1], p_min[0]:p_max[0],] = color
+    # img = img[p_min[1]:p_max[1], p_min[0]:p_min[0] + thickness,] = color
+    # img = img[p_min[1]:p_max[1], p_max[0] - thickness:p_max[0],] = color
+    return img
 
 def import_vector_for_cls():
     try:
@@ -32,3 +56,4 @@ def import_vector_for_cls():
         return data
     except FileNotFoundError:
         return None
+
