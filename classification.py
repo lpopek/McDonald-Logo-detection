@@ -1,4 +1,6 @@
 from cgi import print_directory
+import re
+from tkinter.messagebox import RETRY
 import numpy as np
 import cv2 as cv
 from Node import Node
@@ -76,6 +78,18 @@ def calculate_invariants(segment):
     results[10] = ((M[3, 0] * M[0, 3] - M[1, 2] * M[2, 1])**2 - 
                   4*(M[3, 0]*M[1, 2] - M[2, 1]**2)*(M[0, 3] * M[2, 1] - M[1, 2])) / m00**10
     
-    print("Vector of invariants values calculated")
     return results
 
+def check_segment(features, base_features, std_deviations):
+    score = 0
+    for f, bf, sig in zip(features, base_features, std_deviations):
+        if abs(f - bf) < 5 * sig:
+            score += 1
+        else:
+            score -= 1
+    print("___________SCORE___________")
+    print(score)
+    if score >= len(features) - 4:
+        return True
+    else:
+        return False

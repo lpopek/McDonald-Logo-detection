@@ -21,7 +21,7 @@ def get_segments(img_preproceessed, min_pix=100, min_pixel_flag = True):
                     seg_description_val += 1
             else:
                 pass
-    print("segmentation finished!")
+    print("segmentation finished")
     return img_normalised, seg_description_val - 2, segment_list
 
 

@@ -44,7 +44,7 @@ def calculate_vector_with_sigm(inv_mat):
 
 def get_config_cls_file(median_vector, sigma_vector):
     data = {"feature value": median_vector.tolist(), "standard deviation": sigma_vector.tolist()}
-    with open("data_file.json", "w") as write_file:
+    with open("config.json", "w") as write_file:
         json.dump(data, write_file, indent=4)
     return True
 

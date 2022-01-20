@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
-
+import json
 
 
 def get_img_from_dataset(no):
@@ -28,3 +28,11 @@ def print_img(img, title="domyslny", gray_scale_flag = False):
         plt.imshow(img, cmap="gray")
         plt.show()
 
+def import_vector_for_cls():
+    try:
+        f = open('config.json')
+        data = json.load(f)
+        f.close()
+        return data
+    except FileNotFoundError:
+        return None
