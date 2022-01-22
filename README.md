@@ -1,5 +1,7 @@
 # McDonald Logo detection
 
+![Result of Detection](documentation\final_result.png )
+
 ## Introduction
 
 App created for automatic McDonald logo detection, based on traditional semantic aproach. It is final solution for WUT course of Digital Image Processing (POBR) for Winter semester 2021. The application contains a stand-alone implementation of the algorithms used.
@@ -34,6 +36,8 @@ This is an example of how to list things you need to use the software and how to
   ```
 
 ## Installation and usage
+
+Tested for Windows 10
 
 1. Clone repo
 
