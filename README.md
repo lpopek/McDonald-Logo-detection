@@ -1,6 +1,6 @@
 # McDonald Logo detection
 
-![Result of Detection](documentation\final_result.png )
+![Result of Detection](documentation/final_result.png )
 
 ## Introduction
 
